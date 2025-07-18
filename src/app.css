@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+@variant dark (.dark &);
+
+html {
+  @apply bg-white dark:bg-gray-900 transition-colors;
+}
+
+body {
+  @apply text-gray-900 dark:text-gray-100 transition-colors;
+}
+
+/* Ensure dark mode works */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
