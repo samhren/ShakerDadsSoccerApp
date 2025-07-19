@@ -54,7 +54,7 @@
 								id="name"
 								required
 								value={editingSeason ? editingSeason.name : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 								placeholder="e.g., Summer 2025"
 							/>
 						</div>
@@ -66,7 +66,7 @@
 								id="startDate"
 								required
 								value={editingSeason ? editingSeason.startDate.toISOString().split('T')[0] : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							/>
 						</div>
 						<div>
@@ -77,7 +77,7 @@
 								id="endDate"
 								required
 								value={editingSeason ? editingSeason.endDate.toISOString().split('T')[0] : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							/>
 						</div>
 					</div>
@@ -129,7 +129,7 @@
 								name="newName"
 								id="newName"
 								required
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 								placeholder="e.g., Fall 2025"
 							/>
 						</div>
@@ -158,25 +158,26 @@
 			</div>
 		{/if}
 
-		<div class="mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+		<!-- Desktop Table View -->
+		<div class="mt-4 hidden md:block overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
 			<table class="min-w-full divide-y divide-gray-300">
-				<thead class="bg-gray-50">
+				<thead class="bg-gray-50 dark:bg-gray-800">
 					<tr>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Name</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Start Date</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">End Date</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Status</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Actions</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Name</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Start Date</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">End Date</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Status</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Actions</th>
 					</tr>
 				</thead>
-				<tbody class="bg-white divide-y divide-gray-200">
+				<tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
 					{#each data.seasons as season}
 						<tr>
-							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{season.name}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(season.startDate).toLocaleDateString()}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(season.endDate).toLocaleDateString()}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-								<span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {season.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{season.name}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(season.startDate).toLocaleDateString()}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(season.endDate).toLocaleDateString()}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+								<span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {season.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
 									{season.isActive ? 'Active' : 'Inactive'}
 								</span>
 							</td>
@@ -184,14 +185,14 @@
 								<div class="flex space-x-2">
 									<button
 										type="button"
-										class="text-blue-600 hover:text-blue-900"
+										class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
 										onclick={() => editingSeason = season}
 									>
 										Edit
 									</button>
 									<button
 										type="button"
-										class="text-yellow-600 hover:text-yellow-900"
+										class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
 										onclick={() => duplicatingSeason = season}
 									>
 										Duplicate
@@ -200,7 +201,7 @@
 										<input type="hidden" name="seasonId" value={season.id} />
 										<button
 											type="submit"
-											class="text-red-600 hover:text-red-900"
+											class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
 											onclick={(e) => {
 												if (!confirm('Are you sure you want to delete this season? This action cannot be undone.')) {
 													e.preventDefault();
@@ -215,11 +216,69 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No seasons created yet.</td>
+							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">No seasons created yet.</td>
 						</tr>
 					{/each}
 				</tbody>
 			</table>
+		</div>
+
+		<!-- Mobile Card View -->
+		<div class="mt-4 md:hidden space-y-4">
+			{#each data.seasons as season}
+				<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+					<div class="px-4 py-5 sm:p-6">
+						<div class="flex justify-between items-start mb-4">
+							<div>
+								<h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{season.name}</h3>
+								<p class="text-sm text-gray-500 dark:text-gray-400">
+									{new Date(season.startDate).toLocaleDateString()} - {new Date(season.endDate).toLocaleDateString()}
+								</p>
+							</div>
+							<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium {season.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
+								{season.isActive ? 'Active' : 'Inactive'}
+							</span>
+						</div>
+
+						<div class="flex flex-wrap gap-2">
+							<button
+								type="button"
+								class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+								onclick={() => editingSeason = season}
+							>
+								Edit
+							</button>
+							<button
+								type="button"
+								class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+								onclick={() => duplicatingSeason = season}
+							>
+								Duplicate
+							</button>
+							<form method="POST" action="?/deleteSeason" use:enhance class="inline">
+								<input type="hidden" name="seasonId" value={season.id} />
+								<button
+									type="submit"
+									class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+									onclick={(e) => {
+										if (!confirm('Are you sure you want to delete this season? This action cannot be undone.')) {
+											e.preventDefault();
+										}
+									}}
+								>
+									Delete
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			{:else}
+				<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+					<div class="px-4 py-5 sm:p-6 text-center">
+						<p class="text-sm text-gray-500 dark:text-gray-400">No seasons created yet.</p>
+					</div>
+				</div>
+			{/each}
 		</div>
 	</div>
 
@@ -253,7 +312,7 @@
 								name="seasonId"
 								id="seasonId"
 								required
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							>
 								<option value="">Select a season</option>
 								{#each data.seasons.filter(s => s.isActive) as season}
@@ -269,7 +328,7 @@
 								id="date"
 								required
 								value={editingGame ? editingGame.date.toISOString().split('T')[0] : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							/>
 						</div>
 						<div>
@@ -280,7 +339,7 @@
 								id="time"
 								required
 								value={editingGame ? editingGame.time : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							/>
 						</div>
 						<div>
@@ -291,7 +350,7 @@
 								id="location"
 								required
 								value={editingGame ? editingGame.location : ''}
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 								placeholder="e.g., Shaker Heights Middle School"
 							/>
 						</div>
@@ -301,7 +360,7 @@
 								name="comments"
 								id="comments"
 								rows="3"
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 								placeholder="Additional game information..."
 								value={editingGame ? editingGame.comments || '' : ''}
 							></textarea>
@@ -342,7 +401,7 @@
 								name="newDate"
 								id="newDate"
 								required
-								class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+								class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							/>
 						</div>
 						<div class="text-sm text-gray-600 dark:text-gray-300">
@@ -370,43 +429,44 @@
 			</div>
 		{/if}
 
-		<div class="mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+		<!-- Desktop Table View -->
+		<div class="mt-4 hidden md:block overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
 			<table class="min-w-full divide-y divide-gray-300">
-				<thead class="bg-gray-50">
+				<thead class="bg-gray-50 dark:bg-gray-800">
 					<tr>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Date & Time</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Location</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Season</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Email Sent</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Actions</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Date & Time</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Location</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Season</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Email Sent</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Actions</th>
 					</tr>
 				</thead>
-				<tbody class="bg-white divide-y divide-gray-200">
+				<tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
 					{#each data.games as game}
 						<tr>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
 								{new Date(game.date).toLocaleDateString()} at {game.time}
 							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{game.location}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{game.season.name}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-								<span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {game.emailSent ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{game.location}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{game.season.name}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+								<span class="inline-flex px-2 py-1 text-xs font-medium rounded-full {game.emailSent ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
 									{game.emailSent ? 'Yes' : 'No'}
 								</span>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
 								<div class="flex space-x-2">
-									<a href="/games/{game.id}" class="text-indigo-600 hover:text-indigo-900">View</a>
+									<a href="/games/{game.id}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">View</a>
 									<button
 										type="button"
-										class="text-blue-600 hover:text-blue-900"
+										class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
 										onclick={() => editingGame = game}
 									>
 										Edit
 									</button>
 									<button
 										type="button"
-										class="text-yellow-600 hover:text-yellow-900"
+										class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
 										onclick={() => duplicatingGame = game}
 									>
 										Duplicate
@@ -415,7 +475,7 @@
 										<input type="hidden" name="gameId" value={game.id} />
 										<button
 											type="submit"
-											class="text-red-600 hover:text-red-900"
+											class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
 											onclick={(e) => {
 												if (!confirm('Are you sure you want to delete this game? This will also delete all RSVPs.')) {
 													e.preventDefault();
@@ -430,11 +490,76 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No games created yet.</td>
+							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">No games created yet.</td>
 						</tr>
 					{/each}
 				</tbody>
 			</table>
+		</div>
+
+		<!-- Mobile Card View -->
+		<div class="mt-4 md:hidden space-y-4">
+			{#each data.games as game}
+				<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+					<div class="px-4 py-5 sm:p-6">
+						<div class="flex justify-between items-start mb-4">
+							<div>
+								<h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+									{new Date(game.date).toLocaleDateString()} at {game.time}
+								</h3>
+								<p class="text-sm text-gray-500 dark:text-gray-400">{game.season.name}</p>
+								<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{game.location}</p>
+							</div>
+							<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium {game.emailSent ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}">
+								Email {game.emailSent ? 'Sent' : 'Not Sent'}
+							</span>
+						</div>
+
+						<div class="flex flex-wrap gap-2">
+							<a 
+								href="/games/{game.id}" 
+								class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+							>
+								View
+							</a>
+							<button
+								type="button"
+								class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+								onclick={() => editingGame = game}
+							>
+								Edit
+							</button>
+							<button
+								type="button"
+								class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+								onclick={() => duplicatingGame = game}
+							>
+								Duplicate
+							</button>
+							<form method="POST" action="?/deleteGame" use:enhance class="inline">
+								<input type="hidden" name="gameId" value={game.id} />
+								<button
+									type="submit"
+									class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+									onclick={(e) => {
+										if (!confirm('Are you sure you want to delete this game? This will also delete all RSVPs.')) {
+											e.preventDefault();
+										}
+									}}
+								>
+									Delete
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			{:else}
+				<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+					<div class="px-4 py-5 sm:p-6 text-center">
+						<p class="text-sm text-gray-500 dark:text-gray-400">No games created yet.</p>
+					</div>
+				</div>
+			{/each}
 		</div>
 	</div>
 

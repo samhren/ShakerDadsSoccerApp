@@ -54,8 +54,20 @@ export const rsvp = pgTable('rsvp', {
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
 });
 
+export const guest = pgTable('guest', {
+	id: text('id').primaryKey(),
+	rsvpId: text('rsvp_id')
+		.notNull()
+		.references(() => rsvp.id, { onDelete: 'cascade' }),
+	name: text('name').notNull(),
+	response: varchar('response', { length: 10 }).notNull(), // 'yes', 'no', 'maybe'
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+});
+
 export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
 export type Season = typeof season.$inferSelect;
 export type Game = typeof game.$inferSelect;
 export type RSVP = typeof rsvp.$inferSelect;
+export type Guest = typeof guest.$inferSelect;

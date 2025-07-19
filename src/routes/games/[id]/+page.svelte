@@ -1,8 +1,42 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	export let data;
-	export let form;
+	let { data, form } = $props();
+
+	let userResponse = $state(data.userRSVP?.response || '');
+	let guests = $state(data.userRSVP?.guests || []);
+	let guestCount = $state(guests.length);
+
+	function addGuest() {
+		if (guestCount < 5) { // Maximum 5 guests
+			guests = [...guests, { name: '', response: userResponse }];
+			guestCount = guests.length;
+		}
+	}
+
+	function removeGuest(index: number) {
+		guests = guests.filter((_, i) => i !== index);
+		guestCount = guests.length;
+	}
+
+	function updateGuestCount(newCount: number) {
+		if (newCount > guests.length) {
+			// Add guests
+			while (guests.length < newCount) {
+				guests = [...guests, { name: '', response: userResponse }];
+			}
+		} else if (newCount < guests.length) {
+			// Remove guests
+			guests = guests.slice(0, newCount);
+		}
+		guestCount = newCount;
+	}
+
+	function updateUserResponse(newResponse: string) {
+		userResponse = newResponse;
+		// Update all guests to match user response if they haven't been individually set
+		guests = guests.map(guest => ({ ...guest, response: newResponse }));
+	}
 </script>
 
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -73,7 +107,7 @@
 			<form method="POST" use:enhance>
 				<div class="space-y-6">
 					<div>
-						<label class="text-base font-medium text-gray-900 dark:text-white">Response</label>
+						<label class="text-base font-medium text-gray-900 dark:text-white">Your Response</label>
 						<fieldset class="mt-4">
 							<div class="space-y-4">
 								<div class="flex items-center">
@@ -82,7 +116,8 @@
 										name="response"
 										type="radio"
 										value="yes"
-										checked={data.userRSVP?.response === 'yes'}
+										bind:group={userResponse}
+										onchange={() => updateUserResponse('yes')}
 										class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600"
 									/>
 									<label for="yes" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -95,7 +130,8 @@
 										name="response"
 										type="radio"
 										value="maybe"
-										checked={data.userRSVP?.response === 'maybe'}
+										bind:group={userResponse}
+										onchange={() => updateUserResponse('maybe')}
 										class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600"
 									/>
 									<label for="maybe" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -108,7 +144,8 @@
 										name="response"
 										type="radio"
 										value="no"
-										checked={data.userRSVP?.response === 'no'}
+										bind:group={userResponse}
+										onchange={() => updateUserResponse('no')}
 										class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600"
 									/>
 									<label for="no" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -120,19 +157,103 @@
 					</div>
 
 					<div>
-						<label for="plusGuests" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-							Plus guests
-						</label>
-						<select
-							id="plusGuests"
-							name="plusGuests"
-							class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-						>
-							<option value="0" selected={data.userRSVP?.plusGuests === 0}>0</option>
-							<option value="1" selected={data.userRSVP?.plusGuests === 1}>1</option>
-							<option value="2" selected={data.userRSVP?.plusGuests === 2}>2</option>
-							<option value="3" selected={data.userRSVP?.plusGuests === 3}>3</option>
-						</select>
+						<div class="flex justify-between items-center mb-4">
+							<label class="text-base font-medium text-gray-900 dark:text-white">Guests</label>
+							<div class="flex items-center space-x-2">
+								<label for="guestCount" class="text-sm font-medium text-gray-700 dark:text-gray-300">Number of guests:</label>
+								<select
+									id="guestCount"
+									bind:value={guestCount}
+									onchange={(e) => updateGuestCount(parseInt(e.target.value))}
+									class="px-3 py-1 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+								>
+									<option value="0">0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+							</div>
+						</div>
+
+						{#if guests.length > 0}
+							<div class="space-y-4">
+								{#each guests as guest, index}
+									<div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+										<div class="flex justify-between items-start mb-3">
+											<h4 class="text-sm font-medium text-gray-900 dark:text-white">Guest {index + 1}</h4>
+											<button
+												type="button"
+												onclick={() => removeGuest(index)}
+												class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm"
+											>
+												Remove
+											</button>
+										</div>
+										
+										<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+											<div>
+												<label for="guest-name-{index}" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+												<input
+													id="guest-name-{index}"
+													name="guests[{index}][name]"
+													type="text"
+													bind:value={guest.name}
+													placeholder="Guest name"
+													class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-600 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+												/>
+											</div>
+											
+											<div>
+												<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Response</label>
+												<div class="flex space-x-4">
+													<label class="flex items-center">
+														<input
+															type="radio"
+															name="guests[{index}][response]"
+															value="yes"
+															bind:group={guest.response}
+															class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+														/>
+														<span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Yes</span>
+													</label>
+													<label class="flex items-center">
+														<input
+															type="radio"
+															name="guests[{index}][response]"
+															value="maybe"
+															bind:group={guest.response}
+															class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+														/>
+														<span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Maybe</span>
+													</label>
+													<label class="flex items-center">
+														<input
+															type="radio"
+															name="guests[{index}][response]"
+															value="no"
+															bind:group={guest.response}
+															class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+														/>
+														<span class="ml-2 text-sm text-gray-700 dark:text-gray-300">No</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								{/each}
+							</div>
+						{/if}
+
+						<!-- Hidden input to pass guest count -->
+						<input type="hidden" name="plusGuests" value={guestCount} />
+						
+						<!-- Hidden inputs to pass guest data -->
+						{#each guests as guest, index}
+							<input type="hidden" name="guest-{index}-name" value={guest.name} />
+							<input type="hidden" name="guest-{index}-response" value={guest.response} />
+						{/each}
 					</div>
 
 					<div>
@@ -143,7 +264,7 @@
 							id="comments"
 							name="comments"
 							rows="3"
-							class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+							class="mt-1 block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 							placeholder="Any additional comments..."
 							value={data.userRSVP?.comments || ''}
 						></textarea>

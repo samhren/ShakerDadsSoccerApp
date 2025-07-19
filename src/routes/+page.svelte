@@ -32,96 +32,180 @@
 		</div>
 	{/if}
 	
-	<div class="mt-8 flow-root">
-		<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-			<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-				<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-					<table class="min-w-full divide-y divide-gray-300">
-						<thead class="bg-gray-50">
-							<tr>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-									Date & Time
-								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-									Location
-								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-									RSVPs
-								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
-									Status
-								</th>
-								<th scope="col" class="relative px-6 py-3">
-									<span class="sr-only">Actions</span>
-								</th>
-							</tr>
-						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
-							{#each data.games as game}
-								<tr class="{game.userRSVP ? 'bg-blue-50' : ''}">
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-										<div class="font-medium">
-											{formatDateTime(new Date(game.date), game.time)}
-										</div>
-										<div class="text-xs text-gray-500">{game.season.name}</div>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-										{game.location}
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										<div class="flex space-x-2">
-											<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-												{game.rsvpCounts.yes} Yes
-											</span>
-											<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-												{game.rsvpCounts.maybe} Maybe
-											</span>
-											<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-												{game.rsvpCounts.no} No
-											</span>
-										</div>
-										{#if game.rsvpCounts.totalGuests > 0}
-											<div class="text-xs text-gray-400 mt-1">+{game.rsvpCounts.totalGuests} guest{game.rsvpCounts.totalGuests > 1 ? 's' : ''}</div>
+	<!-- Desktop Table View -->
+	<div class="mt-8 hidden md:block">
+		<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+			<table class="min-w-full divide-y divide-gray-300">
+				<thead class="bg-gray-50 dark:bg-gray-800">
+					<tr>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+							Date & Time
+						</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+							Location
+						</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+							RSVPs
+						</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+							Status
+						</th>
+						<th scope="col" class="relative px-6 py-3">
+							<span class="sr-only">Actions</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+					{#each data.games as game}
+						<tr class="{game.userRSVP ? 'bg-blue-50 dark:bg-blue-900/20' : ''}">
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+								<div class="font-medium">
+									{formatDateTime(new Date(game.date), game.time)}
+								</div>
+								<div class="text-xs text-gray-500 dark:text-gray-400">{game.season.name}</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+								{game.location}
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+								<div class="flex flex-wrap gap-1">
+									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+										{game.rsvpCounts.yes + game.rsvpCounts.guestYes} Yes
+										{#if game.rsvpCounts.guestYes > 0}
+											<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.yes} {game.rsvpCounts.yes === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestYes} {game.rsvpCounts.guestYes === 1 ? 'guest' : 'guests'})</span>
 										{/if}
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{#snippet statusBadge()}
-											{@const totalPlayers = game.rsvpCounts.yes + game.rsvpCounts.totalGuests}
-											{@const isConfirmed = totalPlayers >= 8}
-											<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {isConfirmed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-												{#if isConfirmed}
-													✓ Confirmed ({totalPlayers} players)
-												{:else}
-													⚠ Need {8 - totalPlayers} more
-												{/if}
-											</span>
-										{/snippet}
-										{@render statusBadge()}
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-										<div class="flex justify-end space-x-2">
-											{#if game.userRSVP}
-												<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-													You: {game.userRSVP}
-												</span>
-											{/if}
-											<a href="/games/{game.id}" class="text-indigo-600 hover:text-indigo-900">
-												{game.userRSVP ? 'Update' : 'RSVP'}
-											</a>
-										</div>
-									</td>
-								</tr>
-							{:else}
-								<tr>
-									<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-										No upcoming games scheduled.
-									</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
+									</span>
+									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+										{game.rsvpCounts.maybe + game.rsvpCounts.guestMaybe} Maybe
+										{#if game.rsvpCounts.guestMaybe > 0}
+											<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.maybe} {game.rsvpCounts.maybe === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestMaybe} {game.rsvpCounts.guestMaybe === 1 ? 'guest' : 'guests'})</span>
+										{/if}
+									</span>
+									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">
+										{game.rsvpCounts.no + game.rsvpCounts.guestNo} No
+										{#if game.rsvpCounts.guestNo > 0}
+											<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.no} {game.rsvpCounts.no === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestNo} {game.rsvpCounts.guestNo === 1 ? 'guest' : 'guests'})</span>
+										{/if}
+									</span>
+								</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+								{#snippet statusBadge()}
+									{@const totalPlayers = game.rsvpCounts.yes + game.rsvpCounts.guestYes}
+									{@const isConfirmed = totalPlayers >= 8}
+									<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {isConfirmed ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}">
+										{#if isConfirmed}
+											✓ Confirmed ({totalPlayers} players)
+										{:else}
+											⚠ Need {8 - totalPlayers} more
+										{/if}
+									</span>
+								{/snippet}
+								{@render statusBadge()}
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+								<div class="flex justify-end space-x-2">
+									{#if game.userRSVP}
+										<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+											You: {game.userRSVP}
+										</span>
+									{/if}
+									<a href="/games/{game.id}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+										{game.userRSVP ? 'Update' : 'RSVP'}
+									</a>
+								</div>
+							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+								No upcoming games scheduled.
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Mobile Card View -->
+	<div class="mt-8 md:hidden space-y-4">
+		{#each data.games as game}
+			<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden {game.userRSVP ? 'ring-2 ring-blue-500' : ''}">
+				<div class="px-4 py-5 sm:p-6">
+					<div class="flex justify-between items-start mb-4">
+						<div>
+							<h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+								{formatDateTime(new Date(game.date), game.time)}
+							</h3>
+							<p class="text-sm text-gray-500 dark:text-gray-400">{game.season.name}</p>
+						</div>
+						{#if game.userRSVP}
+							<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+								Your RSVP: {game.userRSVP}
+							</span>
+						{/if}
+					</div>
+
+					<div class="mb-4">
+						<p class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Location</p>
+						<p class="text-sm text-gray-500 dark:text-gray-400">{game.location}</p>
+					</div>
+
+					<div class="mb-4">
+						<p class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">RSVPs</p>
+						<div class="flex flex-wrap gap-2">
+							<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+								{game.rsvpCounts.yes + game.rsvpCounts.guestYes} Yes
+								{#if game.rsvpCounts.guestYes > 0}
+									<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.yes} {game.rsvpCounts.yes === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestYes} {game.rsvpCounts.guestYes === 1 ? 'guest' : 'guests'})</span>
+								{/if}
+							</span>
+							<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+								{game.rsvpCounts.maybe + game.rsvpCounts.guestMaybe} Maybe
+								{#if game.rsvpCounts.guestMaybe > 0}
+									<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.maybe} {game.rsvpCounts.maybe === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestMaybe} {game.rsvpCounts.guestMaybe === 1 ? 'guest' : 'guests'})</span>
+								{/if}
+							</span>
+							<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">
+								{game.rsvpCounts.no + game.rsvpCounts.guestNo} No
+								{#if game.rsvpCounts.guestNo > 0}
+									<span class="ml-1 text-xs opacity-75">({game.rsvpCounts.no} {game.rsvpCounts.no === 1 ? 'player' : 'players'} + {game.rsvpCounts.guestNo} {game.rsvpCounts.guestNo === 1 ? 'guest' : 'guests'})</span>
+								{/if}
+							</span>
+						</div>
+					</div>
+
+					<div class="flex justify-between items-center">
+						<div>
+							{#snippet statusBadge()}
+								{@const totalPlayers = game.rsvpCounts.yes + game.rsvpCounts.guestYes}
+								{@const isConfirmed = totalPlayers >= 8}
+								<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {isConfirmed ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}">
+									{#if isConfirmed}
+										✓ Confirmed ({totalPlayers} players)
+									{:else}
+										⚠ Need {8 - totalPlayers} more
+									{/if}
+								</span>
+							{/snippet}
+							{@render statusBadge()}
+						</div>
+						<a 
+							href="/games/{game.id}" 
+							class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+						>
+							{game.userRSVP ? 'Update RSVP' : 'RSVP Now'}
+						</a>
+					</div>
 				</div>
 			</div>
-		</div>
+		{:else}
+			<div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+				<div class="px-4 py-5 sm:p-6 text-center">
+					<p class="text-sm text-gray-500 dark:text-gray-400">No upcoming games scheduled.</p>
+				</div>
+			</div>
+		{/each}
 	</div>
 </div>
