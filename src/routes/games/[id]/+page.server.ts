@@ -1,12 +1,13 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { eq, and } from 'drizzle-orm';
 import { generateId } from 'lucia';
-import { db } from '$lib/server/db';
+import { createDB } from '$lib/server/db';
 import { game, season, rsvp, user, guest } from '$lib/server/db/schema';
 import { getWeatherForGame, getMockWeatherData } from '$lib/server/weather';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, platform }) => {
+	const db = createDB(platform!.env.DB);
 	if (!locals.user) {
 		redirect(302, '/login');
 	}
@@ -86,7 +87,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ params, request, locals }) => {
+	default: async ({ params, request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user) {
 			redirect(302, '/login');
 		}

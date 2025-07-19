@@ -1,10 +1,10 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/d1';
 import * as schema from './schema';
-import { env } from '$env/dynamic/private';
 
-if (!env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+// This function creates a database instance from a D1 binding
+export function createDB(d1Database: D1Database) {
+	return drizzle(d1Database, { schema });
+}
 
-const client = postgres(env.DATABASE_URL);
-
-export const db = drizzle(client, { schema });
+// This will be set by the SvelteKit adapter
+export type Database = ReturnType<typeof createDB>;

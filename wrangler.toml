@@ -1,0 +1,17 @@
+name = "shaker-soccer-app"
+compatibility_date = "2024-07-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shaker-soccer-db"
+database_id = "d44dbca5-06f8-47e4-9bef-333d9ab0e8f0"
+
+[env.production]
+# Production environment variables will be set in Cloudflare dashboard
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "shaker-soccer-db"
+database_id = "d44dbca5-06f8-47e4-9bef-333d9ab0e8f0"

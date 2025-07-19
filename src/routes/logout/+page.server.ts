@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { invalidateSession, deleteSessionTokenCookie } from '$lib/server/auth';
+import { createDB } from '$lib/server/db';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -7,9 +8,10 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	default: async ({ locals, cookies }) => {
+	default: async ({ locals, cookies, platform }) => {
 		if (locals.session) {
-			await invalidateSession(locals.session.id);
+			const db = createDB(platform!.env.DB);
+			await invalidateSession(locals.session.id, db);
 			deleteSessionTokenCookie({ cookies } as any);
 		}
 		redirect(302, '/login');

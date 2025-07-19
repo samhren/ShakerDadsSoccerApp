@@ -1,11 +1,12 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { eq, desc } from 'drizzle-orm';
 import { generateId } from 'lucia';
-import { db } from '$lib/server/db';
+import { createDB } from '$lib/server/db';
 import { game, season, rsvp, user } from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, platform }) => {
+	const db = createDB(platform!.env.DB);
 	if (!locals.user) {
 		redirect(302, '/login');
 	}
@@ -43,7 +44,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	createSeason: async ({ request, locals }) => {
+	createSeason: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -68,7 +70,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	createGame: async ({ request, locals }) => {
+	createGame: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -97,7 +100,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	updateGame: async ({ request, locals }) => {
+	updateGame: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -128,7 +132,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	deleteGame: async ({ request, locals }) => {
+	deleteGame: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -149,7 +154,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	duplicateGame: async ({ request, locals }) => {
+	duplicateGame: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -184,7 +190,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	updateSeason: async ({ request, locals }) => {
+	updateSeason: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -213,7 +220,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	deleteSeason: async ({ request, locals }) => {
+	deleteSeason: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}
@@ -240,7 +248,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	duplicateSeason: async ({ request, locals }) => {
+	duplicateSeason: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user?.isAdmin) {
 			throw error(403, 'Access denied');
 		}

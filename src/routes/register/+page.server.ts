@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { generateId } from 'lucia';
-import { db } from '$lib/server/db';
+import { createDB } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
 import { hashPassword } from '$lib/server/password';
 import { generateSessionToken, createSession, setSessionTokenCookie } from '$lib/server/auth';
@@ -14,7 +14,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request, cookies, platform }) => {
+		const db = createDB(platform!.env.DB);
 		const formData = await request.formData();
 		const name = formData.get('name') as string;
 		const email = formData.get('email') as string;
@@ -49,7 +50,7 @@ export const actions: Actions = {
 		});
 
 		const sessionToken = generateSessionToken();
-		const session = await createSession(sessionToken, userId);
+		const session = await createSession(sessionToken, userId, db);
 		setSessionTokenCookie({ cookies } as any, sessionToken, session.expiresAt);
 
 		redirect(302, '/');

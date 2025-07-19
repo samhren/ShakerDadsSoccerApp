@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { db } from '$lib/server/db';
+import { createDB } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
 import { hashPassword } from '$lib/server/password';
 import type { Actions, PageServerLoad } from './$types';
@@ -16,7 +16,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	updateProfile: async ({ request, locals }) => {
+	updateProfile: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user) {
 			redirect(302, '/login');
 		}
@@ -47,7 +48,8 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	changePassword: async ({ request, locals }) => {
+	changePassword: async ({ request, locals, platform }) => {
+		const db = createDB(platform!.env.DB);
 		if (!locals.user) {
 			redirect(302, '/login');
 		}

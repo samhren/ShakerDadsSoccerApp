@@ -1,10 +1,11 @@
 import { redirect } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
+import { createDB } from '$lib/server/db';
 import { game, season, rsvp, user, guest } from '$lib/server/db/schema';
 import { eq, desc, sql, and, gte, inArray } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, platform }) => {
+	const db = createDB(platform!.env.DB);
 	if (!locals.user) {
 		redirect(302, '/login');
 	}

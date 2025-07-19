@@ -1,45 +1,46 @@
-import { pgTable, serial, integer, text, timestamp, boolean, varchar } from 'drizzle-orm/pg-core';
+import { sqliteTable, integer, text, blob } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 
-export const user = pgTable('user', {
+export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
 	email: text('email').notNull().unique(),
 	passwordHash: text('password_hash').notNull(),
-	isAdmin: boolean('is_admin').default(false).notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	isAdmin: integer('is_admin', { mode: 'boolean' }).default(false).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull()
 });
 
-export const session = pgTable('session', {
+export const session = sqliteTable('session', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id),
-	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
+	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
 });
 
-export const season = pgTable('season', {
+export const season = sqliteTable('season', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),
-	startDate: timestamp('start_date', { withTimezone: true, mode: 'date' }).notNull(),
-	endDate: timestamp('end_date', { withTimezone: true, mode: 'date' }).notNull(),
-	isActive: boolean('is_active').default(true).notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	startDate: integer('start_date', { mode: 'timestamp' }).notNull(),
+	endDate: integer('end_date', { mode: 'timestamp' }).notNull(),
+	isActive: integer('is_active', { mode: 'boolean' }).default(true).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull()
 });
 
-export const game = pgTable('game', {
+export const game = sqliteTable('game', {
 	id: text('id').primaryKey(),
 	seasonId: text('season_id')
 		.notNull()
 		.references(() => season.id),
-	date: timestamp('date', { withTimezone: true, mode: 'date' }).notNull(),
+	date: integer('date', { mode: 'timestamp' }).notNull(),
 	time: text('time').notNull(),
 	location: text('location').notNull(),
 	comments: text('comments'),
-	emailSent: boolean('email_sent').default(false).notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	emailSent: integer('email_sent', { mode: 'boolean' }).default(false).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull()
 });
 
-export const rsvp = pgTable('rsvp', {
+export const rsvp = sqliteTable('rsvp', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
@@ -47,22 +48,22 @@ export const rsvp = pgTable('rsvp', {
 	gameId: text('game_id')
 		.notNull()
 		.references(() => game.id),
-	response: varchar('response', { length: 10 }).notNull(), // 'yes', 'no', 'maybe'
+	response: text('response').notNull(), // 'yes', 'no', 'maybe'
 	plusGuests: integer('plus_guests').default(0).notNull(),
 	comments: text('comments'),
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull()
 });
 
-export const guest = pgTable('guest', {
+export const guest = sqliteTable('guest', {
 	id: text('id').primaryKey(),
 	rsvpId: text('rsvp_id')
 		.notNull()
-		.references(() => rsvp.id, { onDelete: 'cascade' }),
+		.references(() => rsvp.id),
 	name: text('name').notNull(),
-	response: varchar('response', { length: 10 }).notNull(), // 'yes', 'no', 'maybe'
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull()
+	response: text('response').notNull(), // 'yes', 'no', 'maybe'
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull()
 });
 
 export type Session = typeof session.$inferSelect;
