@@ -37,7 +37,6 @@
     "dependencies": {
         "@oslojs/crypto": "^1.0.1",
         "@oslojs/encoding": "^1.1.0",
-        "argon2": "^0.43.1",
         "drizzle-orm": "^0.44.3",
         "lucia": "^3.2.2",
         "postgres": "^3.4.5"
